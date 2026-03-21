@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sultech | Seguridad & Automatización</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0a0e2a;
+    --deep: #060919;
+    --blue: #1a3bcc;
+    --cyan: #2a7fff;
+    --light-blue: #4da6ff;
+    --white: #f0f4ff;
+    --gray: #8a9bc0;
+    --card-bg: #0d1235;
+    --border: rgba(42,127,255,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--deep);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── UTILITIES ─── */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  .tag {
+    display: inline-block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border: 1px solid var(--border);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  h2.section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--white);
+  }
+  h2.section-title span { color: var(--cyan); }
+  .section-sub {
+    color: var(--gray);
+    font-size: 1rem;
+    margin-top: 10px;
+    max-width: 520px;
+  }
+
+  /* ─── GRID LINES BG ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(42,127,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,127,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 24px;
+    height: 70px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(6,9,25,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo img { height: 42px; filter: brightness(1.1); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-cta {
+    background: var(--blue);
+    color: #fff !important;
+    padding: 8px 20px;
+    border-radius: 3px;
+    border: 1px solid var(--cyan) !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: background .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { background: var(--cyan); box-shadow: 0 0 20px rgba(42,127,255,0.4); }
+
+  /* mobile nav */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--cyan); border-radius: 2px; transition: all .3s; }
+  @media(max-width:768px){
+    .nav-links { display: none; position: fixed; top:70px; left:0; right:0; flex-direction:column; background: rgba(6,9,25,0.97); padding: 24px; gap:20px; border-bottom: 1px solid var(--border); }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+    .nav-cta-wrap { display: none; }
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 70px;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,59,204,0.25) 0%, transparent 70%);
+    top: 50%; left: 55%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(42,127,255,0.1); border: 1px solid var(--border);
+    border-radius: 2px; padding: 6px 14px;
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 2px;
+    color: var(--cyan); text-transform: uppercase; margin-bottom: 22px;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+  .hero-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .hero-title .accent { color: var(--cyan); }
+  .hero-title .line2 { display: block; color: var(--light-blue); }
+  .hero-desc { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 460px; margin-bottom: 36px; }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue); color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none;
+    padding: 14px 28px; border-radius: 3px;
+    border: 1px solid var(--cyan);
+    transition: all .25s;
+  }
+  .btn-primary:hover { background: var(--cyan); box-shadow: 0 0 30px rgba(42,127,255,0.5); transform: translateY(-2px); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--white);
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none;
+    padding: 14px 28px; border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all .25s;
+  }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 48px; padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-num {
+    font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; color: var(--cyan);
+  }
+  .stat-label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* hero visual */
+  .hero-visual {
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .cam-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    position: relative; z-index: 1;
+  }
+  .cam-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .3s, transform .3s;
+    animation: fadeUp .6s both;
+  }
+  .cam-card:hover { border-color: var(--cyan); transform: translateY(-4px); }
+  .cam-card:nth-child(1){ animation-delay:.1s }
+  .cam-card:nth-child(2){ animation-delay:.2s }
+  .cam-card:nth-child(3){ animation-delay:.3s }
+  .cam-card:nth-child(4){ animation-delay:.4s }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .cam-icon { font-size: 2rem; margin-bottom: 10px; }
+  .cam-name { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 600; color: var(--white); }
+  .cam-sub { font-size: 12px; color: var(--gray); margin-top: 4px; }
+  .cam-dot {
+    position: absolute; top: 14px; right: 14px;
+    width: 8px; height: 8px; border-radius: 50%; background: #22cc66;
+    box-shadow: 0 0 8px #22cc66;
+    animation: pulse 2s infinite;
+  }
+  .cam-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .cam-card:hover::before { opacity: 1; }
+
+  @media(max-width:900px){
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+  }
+
+  /* ─── SERVICES ─── */
+  #servicios {
+    padding: 100px 0;
+    position: relative;
+  }
+  .section-head { margin-bottom: 56px; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 28px;
+    position: relative; overflow: hidden;
+    transition: all .3s;
+    cursor: default;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0); transition: transform .3s;
+    transform-origin: left;
+  }
+  .service-card:hover { border-color: rgba(42,127,255,0.4); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,20,0.4); }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-icon { font-size: 2.4rem; margin-bottom: 18px; }
+  .service-name {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 700;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .service-desc { font-size: .9rem; color: var(--gray); line-height: 1.6; }
+  .service-items { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .service-items li {
+    font-size: .82rem; color: var(--gray);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .service-items li::before { content: '›'; color: var(--cyan); font-size: 1rem; }
+
+  /* ─── PACKAGES ─── */
+  #paquetes {
+    padding: 100px 0;
+    background: linear-gradient(180deg, transparent, rgba(10,14,42,0.6), transparent);
+    position: relative;
+  }
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    margin-top: 48px;
+  }
+  .pkg-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 32px;
+    position: relative;
+    transition: all .3s;
+    display: flex; flex-direction: column;
+  }
+  .pkg-card.featured {
+    border-color: var(--cyan);
+    background: linear-gradient(145deg, #0d1640, #0a0e2a);
+    box-shadow: 0 0 40px rgba(42,127,255,0.15);
+  }
+  .pkg-badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--cyan); color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 18px; border-radius: 2px;
+    white-space: nowrap;
+  }
+  .pkg-card:hover:not(.featured) { border-color: rgba(42,127,255,0.4); transform: translateY(-5px); }
+  .pkg-card.featured:hover { transform: translateY(-5px); box-shadow: 0 0 60px rgba(42,127,255,0.25); }
+  .pkg-icon { font-size: 2.2rem; margin-bottom: 16px; }
+  .pkg-name {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .pkg-subtitle { font-size: .85rem; color: var(--gray); margin-bottom: 24px; }
+  .pkg-features { list-style: none; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .pkg-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .9rem; color: var(--gray); line-height: 1.4;
+  }
+  .pkg-features li .check { color: var(--cyan); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .pkg-cta {
+    display: block; text-align: center; margin-top: 28px;
+    background: var(--blue); color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none;
+    padding: 14px; border-radius: 4px;
+    border: 1px solid var(--cyan);
+    transition: all .25s;
+  }
+  .pkg-cta:hover { background: var(--cyan); box-shadow: 0 0 20px rgba(42,127,255,0.4); }
+  .pkg-card.featured .pkg-cta { background: var(--cyan); }
+  .pkg-card.featured .pkg-cta:hover { background: var(--light-blue); }
+
+  /* ─── GALLERY ─── */
+  #galeria {
+    padding: 100px 0;
+    position: relative;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .gallery-item {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    transition: all .3s;
+    cursor: pointer;
+  }
+  .gallery-item:first-child {
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+  }
+  .gallery-item:hover { border-color: var(--cyan); transform: scale(1.02); }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #0d1235 0%, #0a1040 100%);
+  }
+  .gallery-placeholder .gicon { font-size: 2.5rem; opacity: .4; }
+  .gallery-placeholder .glabel {
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; color: var(--gray);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: rgba(26,59,204,0.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .3s;
+  }
+  .gallery-overlay span {
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; color: #fff;
+    letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid var(--cyan); padding-bottom: 3px;
+  }
+
+  @media(max-width:700px){
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 2; }
+  }
+
+  /* ─── CONTACT ─── */
+  #contacto {
+    padding: 100px 0;
+    background: linear-gradient(180deg, transparent, rgba(10,14,42,0.8));
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+    margin-top: 48px;
+  }
+  @media(max-width:768px){ .contact-grid { grid-template-columns: 1fr; } }
+
+  .contact-info { display: flex; flex-direction: column; gap: 28px; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px;
+  }
+  .contact-item-icon {
+    width: 42px; height: 42px; border-radius: 6px;
+    background: rgba(42,127,255,0.1); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .contact-item-label { font-size: 11px; color: var(--cyan); letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; }
+  .contact-item-value { font-size: .95rem; color: var(--white); margin-top: 3px; }
+
+  .form-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 40px;
+  }
+  .form-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .form-subtitle { font-size: .85rem; color: var(--gray); margin-bottom: 28px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:500px){ .form-row { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .form-group label {
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gray);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 4px; color: var(--white);
+    font-family: 'DM Sans', sans-serif; font-size: .9rem;
+    padding: 12px 16px; outline: none;
+    transition: border-color .2s;
+    width: 100%;
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(138,155,192,0.5); }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--cyan); background: rgba(42,127,255,0.06); }
+  .form-group select option { background: var(--navy); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-btns { display: flex; gap: 12px; margin-top: 20px; }
+  .btn-submit {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--blue); color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 20px; border-radius: 4px;
+    border: 1px solid var(--cyan);
+    cursor: pointer; transition: all .25s;
+  }
+  .btn-submit:hover { background: var(--cyan); box-shadow: 0 0 20px rgba(42,127,255,0.4); }
+  .btn-wa {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: #128c4a; color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    padding: 14px 20px; border-radius: 4px;
+    border: 1px solid #25d366;
+    cursor: pointer; transition: all .25s;
+  }
+  .btn-wa:hover { background: #25d366; box-shadow: 0 0 20px rgba(37,211,102,0.4); }
+
+  /* toast */
+  #toast {
+    display: none;
+    position: fixed; bottom: 30px; right: 30px;
+    background: #128c4a; color: #fff;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; letter-spacing: 1px;
+    padding: 14px 24px; border-radius: 6px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    z-index: 999;
+    animation: slideUp .3s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--gray);
+    font-size: .85rem;
+  }
+  footer .footer-logo img { height: 36px; margin-bottom: 16px; filter: brightness(0.9); }
+  footer p { margin-top: 8px; }
+  footer a { color: var(--cyan); text-decoration: none; }
+
+  /* ─── WA FLOAT ─── */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    width: 56px; height: 56px;
+    background: #25d366; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+    animation: bounce 3s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.6); }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .wa-float svg { width: 30px; height: 30px; }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s, transform .6s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="/mnt/user-data/uploads/Sultech_BrandELementBlue-02.png" alt="Sultech"/>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#paquetes">Paquetes</a></li>
+    <li><a href="#galeria">Proyectos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="nav-cta">Cotizar ahora</a></li>
+  </ul>
+  <div class="nav-cta-wrap">
+    <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="nav-cta">Cotizar</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Sistema de seguridad inteligente</div>
+      <h1 class="hero-title">
+        Protege lo que<br>
+        más <span class="accent">importa.</span>
+        <span class="line2">Con tecnología real.</span>
+      </h1>
+      <p class="hero-desc">Soluciones integrales en cámaras de seguridad, alarmas, control de acceso, automatización y remodelación de espacios. Instalación profesional en toda la región.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.545 4.07 1.504 5.79L0 24l6.384-1.677A11.949 11.949 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.77-.525-5.337-1.437l-.383-.228-3.97 1.043 1.063-3.875-.249-.396A9.946 9.946 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Cotizar por WhatsApp
+        </a>
+        <a href="#paquetes" class="btn-ghost">Ver paquetes →</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Instalaciones</div>
+        </div>
+        <div>
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Soporte técnico</div>
+        </div>
+        <div>
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Años de exp.</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="cam-grid">
+        <div class="cam-card">
+          <div class="cam-dot"></div>
+          <div class="cam-icon">📷</div>
+          <div class="cam-name">Cámaras IP</div>
+          <div class="cam-sub">HD / 4K · Día & Noche</div>
+        </div>
+        <div class="cam-card">
+          <div class="cam-dot"></div>
+          <div class="cam-icon">🚨</div>
+          <div class="cam-name">Alarmas</div>
+          <div class="cam-sub">Sensores · Monitoreo</div>
+        </div>
+        <div class="cam-card">
+          <div class="cam-dot"></div>
+          <div class="cam-icon">🔐</div>
+          <div class="cam-name">Control Acceso</div>
+          <div class="cam-sub">Biométrico · Tarjetas</div>
+        </div>
+        <div class="cam-card">
+          <div class="cam-dot"></div>
+          <div class="cam-icon">🏠</div>
+          <div class="cam-name">Automatización</div>
+          <div class="cam-sub">Smart Home · Oficina</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="tag">Nuestros Servicios</div>
+      <h2 class="section-title">Todo lo que tu espacio<br><span>necesita para ser seguro</span></h2>
+      <p class="section-sub">Ofrecemos soluciones completas desde la consultoría hasta la instalación y soporte post-venta.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">📹</div>
+        <div class="service-name">Video Vigilancia</div>
+        <div class="service-desc">Sistemas de cámaras de alta definición para hogares, negocios e industrias.</div>
+        <ul class="service-items">
+          <li>Cámaras HD, Full HD y 4K</li>
+          <li>Visión nocturna infrarroja</li>
+          <li>Grabación en la nube y NVR local</li>
+          <li>Acceso remoto desde tu móvil</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔔</div>
+        <div class="service-name">Sistemas de Alarmas</div>
+        <div class="service-desc">Protección perimetral y detección de intrusos con respuesta inmediata.</div>
+        <ul class="service-items">
+          <li>Sensores de movimiento y contacto</li>
+          <li>Sirenas y alertas silenciosas</li>
+          <li>Monitoreo 24/7 centralizado</li>
+          <li>Integración con app móvil</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔒</div>
+        <div class="service-name">Control de Acceso</div>
+        <div class="service-desc">Gestión inteligente de quién entra y sale de tus instalaciones.</div>
+        <ul class="service-items">
+          <li>Lectores biométricos (huella/facial)</li>
+          <li>Tarjetas y llaves electrónicas</li>
+          <li>Torniquetes y barreras</li>
+          <li>Registro y auditoría de acceso</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">⚡</div>
+        <div class="service-name">Automatización</div>
+        <div class="service-desc">Convierte tu hogar u oficina en un espacio inteligente y eficiente.</div>
+        <ul class="service-items">
+          <li>Iluminación automática</li>
+          <li>Persianas y climatización</li>
+          <li>Integración con Alexa / Google</li>
+          <li>Escenas y programaciones</li>
+        </ul>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🏗️</div>
+        <div class="service-name">Remodelación</div>
+        <div class="service-desc">Transformamos espacios con diseño arquitectónico funcional y moderno.</div>
+        <ul class="service-items">
+          <li>Diseño y planificación de espacios</li>
+          <li>Instalaciones eléctricas y civiles</li>
+          <li>Acabados de alta calidad</li>
+          <li>Integración tecnológica</li>
+        </ul>
+      </div>
+      <div class="service-card reveal" style="background: linear-gradient(135deg, rgba(26,59,204,0.2), rgba(42,127,255,0.1)); border-color: rgba(42,127,255,0.3);">
+        <div class="service-icon">🛡️</div>
+        <div class="service-name">Soporte & Mantenimiento</div>
+        <div class="service-desc">Garantizamos el funcionamiento continuo de todos tus sistemas de seguridad.</div>
+        <ul class="service-items">
+          <li>Revisiones periódicas programadas</li>
+          <li>Respuesta técnica en 24h</li>
+          <li>Actualizaciones de firmware</li>
+          <li>Garantía extendida en equipos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAQUETES -->
+<section id="paquetes">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="tag">Paquetes de Seguridad</div>
+      <h2 class="section-title">Planes diseñados para<br><span>cada necesidad</span></h2>
+      <p class="section-sub">Todos los paquetes incluyen instalación profesional, configuración y garantía. ¿Necesitas algo personalizado? Contáctanos.</p>
+    </div>
+    <div class="packages-grid">
+      <!-- Paquete 1 -->
+      <div class="pkg-card reveal">
+        <div class="pkg-icon">🏠</div>
+        <div class="pkg-name">Plan Básico</div>
+        <div class="pkg-subtitle">Ideal para hogares y locales pequeños</div>
+        <ul class="pkg-features">
+          <li><span class="check">✓</span> 4 Cámaras HD de alta resolución</li>
+          <li><span class="check">✓</span> DVR / NVR con disco duro incluido</li>
+          <li><span class="check">✓</span> Instalación y cableado profesional</li>
+          <li><span class="check">✓</span> Configuración de acceso remoto</li>
+          <li><span class="check">✓</span> Soporte técnico 30 días</li>
+          <li><span class="check">✓</span> Garantía de equipos 1 año</li>
+        </ul>
+        <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Plan%20B%C3%A1sico%20de%204%20c%C3%A1maras" target="_blank" class="pkg-cta">Consultar precio →</a>
+      </div>
+      <!-- Paquete 2 (featured) -->
+      <div class="pkg-card featured reveal">
+        <div class="pkg-badge">⭐ Más Popular</div>
+        <div class="pkg-icon">🏢</div>
+        <div class="pkg-name">Plan Profesional</div>
+        <div class="pkg-subtitle">Para negocios, oficinas y residencias amplias</div>
+        <ul class="pkg-features">
+          <li><span class="check">✓</span> 8 Cámaras Full HD / 4K</li>
+          <li><span class="check">✓</span> NVR avanzado con 2TB de almacenamiento</li>
+          <li><span class="check">✓</span> Instalación y cableado profesional</li>
+          <li><span class="check">✓</span> App móvil con notificaciones en tiempo real</li>
+          <li><span class="check">✓</span> Panel de alarma integrado</li>
+          <li><span class="check">✓</span> Soporte técnico 90 días</li>
+          <li><span class="check">✓</span> Garantía de equipos 2 años</li>
+        </ul>
+        <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Plan%20Profesional%20de%208%20c%C3%A1maras" target="_blank" class="pkg-cta">Consultar precio →</a>
+      </div>
+      <!-- Paquete 3 -->
+      <div class="pkg-card reveal">
+        <div class="pkg-icon">🛡️</div>
+        <div class="pkg-name">Kit Vigilancia & Alarma</div>
+        <div class="pkg-subtitle">Seguridad completa 360°</div>
+        <ul class="pkg-features">
+          <li><span class="check">✓</span> 6 Cámaras estratégicas Full HD</li>
+          <li><span class="check">✓</span> Sistema de alarma perimetral completo</li>
+          <li><span class="check">✓</span> Sensores de movimiento y apertura</li>
+          <li><span class="check">✓</span> Sirena interior y exterior</li>
+          <li><span class="check">✓</span> Control desde app con alertas</li>
+          <li><span class="check">✓</span> Instalación profesional incluida</li>
+          <li><span class="check">✓</span> Soporte prioritario 6 meses</li>
+        </ul>
+        <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20Kit%20Vigilancia%20y%20Alarma" target="_blank" class="pkg-cta">Consultar precio →</a>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <p style="color:var(--gray); font-size:.9rem; margin-bottom:16px;">¿Necesitas un paquete a medida para tu empresa o proyecto?</p>
+      <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20necesito%20un%20paquete%20personalizado" target="_blank" class="btn-primary" style="display:inline-flex;">
+        Solicitar cotización personalizada
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="tag">Proyectos Realizados</div>
+      <h2 class="section-title">Nuestro trabajo<br><span>habla por sí solo</span></h2>
+      <p class="section-sub">Instalaciones en hogares, empresas, centros comerciales e industrias en toda la región.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gicon">🏢</div>
+          <div class="glabel">Proyecto Corporativo</div>
+        </div>
+        <div class="gallery-overlay"><span>Ver proyecto</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gicon">🏠</div>
+          <div class="glabel">Residencia</div>
+        </div>
+        <div class="gallery-overlay"><span>Ver proyecto</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gicon">🔐</div>
+          <div class="glabel">Control de Acceso</div>
+        </div>
+        <div class="gallery-overlay"><span>Ver proyecto</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gicon">🏗️</div>
+          <div class="glabel">Remodelación</div>
+        </div>
+        <div class="gallery-overlay"><span>Ver proyecto</span></div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gicon">⚡</div>
+          <div class="glabel">Automatización</div>
+        </div>
+        <div class="gallery-overlay"><span>Ver proyecto</span></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:32px;" class="reveal">
+      <a href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20ver%20m%C3%A1s%20proyectos" target="_blank" class="btn-ghost">Ver más proyectos en WhatsApp →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="tag">Contáctanos</div>
+      <h2 class="section-title">Hablemos de tu<br><span>proyecto de seguridad</span></h2>
+      <p class="section-sub">Completa el formulario o escríbenos por WhatsApp. Respondemos en menos de 2 horas.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <div class="contact-item-icon">📱</div>
+          <div>
+            <div class="contact-item-label">WhatsApp / Teléfono</div>
+            <div class="contact-item-value">+507 6076-2938</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div>
+            <div class="contact-item-label">Horario de Atención</div>
+            <div class="contact-item-value">Lunes – Sábado: 8:00 AM – 6:00 PM</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-label">Área de Cobertura</div>
+            <div class="contact-item-value">Panamá · Chiriquí y alrededores</div>
+          </div>
+        </div>
+        <div class="contact-item" style="border-color:#25d366; background: rgba(37,211,102,0.06);">
+          <div class="contact-item-icon" style="background:rgba(37,211,102,0.1); border-color:rgba(37,211,102,0.3);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.545 4.07 1.504 5.79L0 24l6.384-1.677A11.949 11.949 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.77-.525-5.337-1.437l-.383-.228-3.97 1.043 1.063-3.875-.249-.396A9.946 9.946 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label" style="color:#25d366;">Cotización Rápida</div>
+            <div class="contact-item-value">Respuesta garantizada en menos de 2 horas</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card reveal">
+        <div class="form-title">Solicitar Información</div>
+        <div class="form-subtitle">Te contactaremos a la brevedad posible</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="fname" placeholder="Tu nombre"/>
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="fphone" placeholder="+507 0000-0000"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Servicio de interés</label>
+          <select id="fservice">
+            <option value="">Seleccionar servicio...</option>
+            <option>Cámaras de Seguridad</option>
+            <option>Sistema de Alarmas</option>
+            <option>Control de Acceso</option>
+            <option>Automatización del Hogar</option>
+            <option>Remodelación de Espacios</option>
+            <option>Paquete Completo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mensaje</label>
+          <textarea id="fmessage" placeholder="Descríbenos tu proyecto o necesidad..."></textarea>
+        </div>
+        <div class="form-btns">
+          <button class="btn-submit" onclick="submitForm()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar consulta
+          </button>
+          <a id="waFormBtn" href="#" target="_blank" class="btn-wa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.545 4.07 1.504 5.79L0 24l6.384-1.677A11.949 11.949 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.77-.525-5.337-1.437l-.383-.228-3.97 1.043 1.063-3.875-.249-.396A9.946 9.946 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            WA
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="/mnt/user-data/uploads/Sultech_BrandELementBlue-02.png" alt="Sultech"/>
+  </div>
+  <p style="color:var(--gray);">Seguridad · Automatización · Remodelación</p>
+  <p style="margin-top:16px;">© 2025 Sultech. Todos los derechos reservados.</p>
+  <p style="margin-top:8px;">Desarrollado con ❤️ para proteger lo que más importa</p>
+</footer>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://wa.me/50760762938?text=Hola%20Sultech%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20servicios" target="_blank" title="Chatear por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.098.545 4.07 1.504 5.79L0 24l6.384-1.677A11.949 11.949 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.77-.525-5.337-1.437l-.383-.228-3.97 1.043 1.063-3.875-.249-.396A9.946 9.946 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+<!-- TOAST -->
+<div id="toast">✅ Mensaje enviado. Te contactaremos pronto!</div>
+
+<script>
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Form → WhatsApp
+  function submitForm() {
+    const name = document.getElementById('fname').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
+    const service = document.getElementById('fservice').value;
+    const msg = document.getElementById('fmessage').value.trim();
+    if (!name) { alert('Por favor ingresa tu nombre.'); return; }
+    const text = `Hola Sultech! 👋\n\nNombre: ${name}\nTeléfono: ${phone || 'No indicado'}\nServicio: ${service || 'No especificado'}\nMensaje: ${msg || 'Sin mensaje adicional'}`;
+    const url = `https://wa.me/50760762938?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+    const toast = document.getElementById('toast');
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 4000);
+  }
+
+  // WA quick button updates dynamically
+  document.getElementById('waFormBtn').addEventListener('click', function(e) {
+    const name = document.getElementById('fname').value.trim();
+    const service = document.getElementById('fservice').value;
+    const text = `Hola Sultech! Soy ${name || 'un cliente'}, me interesa: ${service || 'sus servicios'}.`;
+    this.href = `https://wa.me/50760762938?text=${encodeURIComponent(text)}`;
+  });
+</script>
+</body>
+</html>
